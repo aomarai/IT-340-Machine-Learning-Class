@@ -1,49 +1,52 @@
 def main():
-    # Read in the experts
-    expertsDict = {}
-    with open("Experts.txt","r") as f:
-        lines = f.readlines()
-
-    # Grab all the fields to fill the experts dict
-    for s in lines:
-        fields = s.split("\t")
-        expert_id = fields[0]
-        last_name = fields[1]
-        first_name = fields[2]
-        h_index = fields[3]
-        client_id = fields[4]
-        affiliation = fields[5]
-        publication_num = fields[6]
-
-        expertsDict[expert_id] = {"Last Name" : last_name, "First Name" : first_name,
-                                  "H Index" : h_index, "Client ID" : client_id,
-                                  "Affiliation" : [a.strip() for a in affiliation.split(",")],
-                                  "Number of Publications" : publication_num.strip()}
-
-    #for record in expertsDict.items():
-        #print(record)
-
-    # Open the profiles file and create dict for it
+    # Create big main dicts
+    big_dict = {}
     profiles = {}
-    with open("Profiles.txt") as f:
-        lines = f.readlines()
+    experts = {}
 
-    # Have to create yet another dictionary for all the concepts for each expert
-    for s in lines:
-        fields = s.split("\t")
-        expert_id = fields[0]
-        concept_id = fields[1]
-        concept_name = fields[2]
-        rank = fields[3]
-        vocabulary = fields[4]
+    # Fill the profiles dict
+    with open('Profiles.txt', encoding='latin-1') as file:
+        file.readline()
+        for line in file.readlines():
+            fields = line.split('\t')  # split by tabs
+            expert_id = fields[0].strip('\"') # grab the ID as the key
+            if expert_id not in profiles:  # if the expert isn't in the dict, add them. otherwise add to the back
+                profiles.update({expert_id: [fields[1].strip('\"'), fields[2].strip('\"'),
+                                             fields[3].strip('\"'), fields[4].strip('\"')]})
+            else:
+                profiles[expert_id].append([fields[1].strip('\"'), fields[2].strip('\"'),
+                                            fields[3].strip('\"'), fields[4].strip('\"')])
+    file.close()
 
-        profiles[expert_id] = {"Concept ID" : concept_id, "Concept Name" : concept_name,
-                               "Rank" : rank, "Vocabulary" : vocabulary.strip()}
+    # Fill the experts dict
+    with open('Experts.txt', encoding='latin-1') as file:
+        file.readline()
+        for line in file.readlines():
+            fields = line.split('\t')
+            expert_id = fields[0].strip('\"')
+            full_name = fields[2].strip('\"') + " " + fields[1].strip('\"') # Strip the double quotes from names
+            # TODO: create a list of the colleges from the beginning of fields[5]
+            if expert_id not in experts:
+                experts.update({expert_id: [full_name, fields[3].strip('\"'), fields[4].strip('\"'),
+                                            fields[5].strip('\"'), fields[6].strip('\"\n')]})
+            else:
+                profiles[expert_id].append([full_name, fields[3].strip('\"'), fields[4].strip('\"'),
+                                            fields[5].strip('\"'), fields[6].strip('\"\n')])
+    file.close()
 
-    for record in profiles.items():
-        print(record)
-    #print("\t\tWelcome to the NC Scholar System\nWe currently include scholars from the following institutes:\n")
 
+    big_dict.update(profiles)
+    big_dict.update(experts)
+
+    for k, v in experts.items():
+        print(k,v)
+
+    # Begin the menu stuff
+    print('\t\tWelcome to the NC Scholar System\nWe currently include scholars from the following institutes:\n')
+
+def printDict(printable):
+    for k, v in printable.items():
+        print(k, v)
 
 
 if __name__ == "__main__":
