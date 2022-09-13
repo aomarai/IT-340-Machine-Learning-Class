@@ -11,14 +11,13 @@ def main():
             fields = line.split('\t')  # split by tabs
             expert_id = fields[0].strip('\"') # grab the ID as the key
             if expert_id not in profiles:  # if the expert isn't in the dict, add them. otherwise add to the back
-                profiles.update({expert_id: [fields[1].strip('\"'), fields[2].strip('\"'),
-                                             fields[3].strip('\"'), fields[4].strip('\"')]})
-            else:
-                profiles[expert_id].append([fields[1].strip('\"'), fields[2].strip('\"'),
-                                            fields[3].strip('\"'), fields[4].strip('\"')])
+                profiles.update({expert_id: [fields[2].strip('\"')]})
+            else: # don't need rank or vocabulary, s don't include
+                profiles[expert_id].append([fields[2].strip('\"')])
     file.close()
 
     # Fill the experts dict
+    collegeSet = {}
     with open('Experts.txt', encoding='latin-1') as file:
         file.readline()
         for line in file.readlines():
@@ -38,8 +37,9 @@ def main():
     big_dict.update(profiles)
     big_dict.update(experts)
 
-    for k, v in experts.items():
-        print(k,v)
+    #for k, v in experts.items():
+        #print(k,v)
+    printDict(profiles)
 
     # Begin the menu stuff
     print('\t\tWelcome to the NC Scholar System\nWe currently include scholars from the following institutes:\n')
