@@ -17,20 +17,26 @@ def main():
     file.close()
 
     # Fill the experts dict
-    collegeSet = {}
+    college_dict = {}
     with open('Experts.txt', encoding='latin-1') as file:
         file.readline()
         for line in file.readlines():
             fields = line.split('\t')
             expert_id = fields[0].strip('\"')
             full_name = fields[2].strip('\"') + " " + fields[1].strip('\"') # Strip the double quotes from names
-            # TODO: create a list of the colleges from the beginning of fields[5]
-            if expert_id not in experts:
-                experts.update({expert_id: [full_name, fields[3].strip('\"'), fields[4].strip('\"'),
-                                            fields[5].strip('\"'), fields[6].strip('\"\n')]})
+            # TODO: re-create the dict structure seen in the doc maybe
+            university = fields[5].strip('\"').split(',')[0]
+            if university not in college_dict:
+                college_dict.update({university: [full_name, expert_id, fields[5].strip('\"')]})
             else:
-                profiles[expert_id].append([full_name, fields[3].strip('\"'), fields[4].strip('\"'),
-                                            fields[5].strip('\"'), fields[6].strip('\"\n')])
+                college_dict[university].append([full_name, expert_id, fields[5].strip('\"')])
+                # TODO: See if this dict is even necessary anymore vs college_dict
+            #if expert_id not in experts:
+                #experts.update({expert_id: [full_name, fields[5].strip('\"')]})
+            #else:
+                #profiles[expert_id].append([full_name, fields[5].strip('\"\n')])
+
+            # Separate the colleges and affiliations into
     file.close()
 
 
@@ -39,7 +45,7 @@ def main():
 
     #for k, v in experts.items():
         #print(k,v)
-    printDict(profiles)
+    printDict(college_dict)
 
     # Begin the menu stuff
     print('\t\tWelcome to the NC Scholar System\nWe currently include scholars from the following institutes:\n')
