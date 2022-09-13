@@ -34,32 +34,18 @@ def main():
                 subject_within_school = fields[5].strip('\"').split(',')[2] # Some data in the file is messed up
             except IndexError:
                 subject_within_school = 'null'
-            if university not in college_dict:
-                #college_dict.update({university: [full_name, expert_id, fields[5].strip('\"')]})
+            if university not in college_dict: # If the uni hasn't been added, add it
                 college_dict.update({university: {subject_within_school: {full_name: [profiles.get(expert_id, [concept_name])]}}})
-            #else:
+            #else:  # If it has been added, just add it onto the existing dict
+                # TODO: Get the appending working so multiple professors will show up per subject
                 #college_dict[university].append([full_name, expert_id, fields[5].strip('\"')])
+                #college_dict[university].append({subject_within_school: {full_name: [profiles.get(expert_id, [concept_name])]}}) # Append the subject
 
-            print_dict(college_dict)
-
-            # TODO: See if this dict is even necessary anymore vs college_dict
-            # if expert_id not in experts:
-            # experts.update({expert_id: [full_name, fields[5].strip('\"')]})
-            # else:
-            # profiles[expert_id].append([full_name, fields[5].strip('\"\n')])
-
-            # Separate the colleges and affiliations into
         file.close()
-
+    print(college_dict)
     big_dict.update(profiles)
     big_dict.update(college_dict)
 
-
-    #print_dict(big_dict)
-
-    # for k, v in experts.items():
-    # print(k,v)
-    # print_dict(college_dict)
 
     # Begin the menu stuff
     print('\t\tWelcome to the NC Scholar System\nWe currently include scholars from the following institutes:\n')
@@ -71,6 +57,8 @@ def main():
         print('Invalid input, try again.')
         input_college = input()
     print(input_college + ' has scholars in the following areas/departments:\n')
+    # TODO: Get subject retrieval working
+    print(college_dict[input_college].get(subject_within_school))
 
     print('Select an area:')
     area_selected = input()
