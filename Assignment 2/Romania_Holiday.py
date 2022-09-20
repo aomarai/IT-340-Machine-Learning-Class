@@ -40,6 +40,7 @@ class PathFindingAgent(object):
         flag = True
         self.route.append(start)
         self.current_city = start
+        cities = [start]
         while flag:
             if self.total_cost >= budget:
                 print('Gone over budget. Please increase the budget.')
@@ -86,5 +87,5 @@ class PathFindingAgent(object):
                 
 if __name__ == '__main__':
     agent = PathFindingAgent(Romania_Map)
-    agent.solve('Bucharest','Arad', 700)
+    agent.solve('Bucharest','Arad', 10000)
     print (agent.route, agent.total_cost)                

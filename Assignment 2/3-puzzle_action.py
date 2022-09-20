@@ -57,7 +57,7 @@ def solvable(goal):
             for j in action(i):
                 flag2 = False
                 for k in explored:
-                    if np.array(j, k):
+                    if np.array_equal(j, k):
                         flag2 = True
                         break
                 if flag2 is False:
@@ -71,5 +71,5 @@ def solvable(goal):
 
 if __name__ == '__main__':
     results = action(np.asarray([[0, 1], [2, 3]]))
-    print(results)
-    print('Solvable: ' + solvable(results))
+    #print(results)
+    print(solvable(np.asarray([[0, 1], [2, 3]])))
