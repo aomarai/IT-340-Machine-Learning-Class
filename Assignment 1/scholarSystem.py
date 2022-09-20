@@ -23,7 +23,7 @@ def main():
             fields = line.split('\t')
             expert_id = fields[0].strip('\"')
             full_name = fields[2].strip('\"') + " " + fields[1].strip('\"')  # Strip the double quotes from names
-            # TODO: Dict structure must be: {Uni: {Subject: {Person: [concept list]}}}
+            # Dict structure must be: {Uni: {Subject: {Person: [concept list]}}}
             university = fields[5].strip('\"').lstrip().split(',')[0]  # Grab the university name
             try:  # Grab the subject from inside the school
                 subject_within_school = fields[5].strip('\" ').split(', ', 2)[2]  # Some data in the file is messed up
