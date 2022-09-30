@@ -3,7 +3,9 @@
 Created on Sun Feb  2 14:01:17 2020
 
 @author: xfang13
+@editors: John John Skluzacek and Ashkan Omaraie
 """
+import heapq
 # import operator
 from heapq import heappush as push
 from heapq import heappop as pop
@@ -67,55 +69,80 @@ H = {'S': 7, 'A': 6, 'B': 2, 'C': 1, 'G': 0}
 
 
 def main():
-    # oh, god oh heck oh jeez
+    # oh, god oh heck oh fuck
 
     # gist of A*
     # first we need to mark out start and see what available
     # then we need to calculate the f value for each of the nodes
-    # the f value is calculated by adding the cost with the hueristc value
-    # we then chose the lowest value from the list (priority queue) and repeat the process
-    # if any of the nodes are the target we chose that and end
+    # the f value is calculated by adding the cost with the heuristic value
+    # we then chose the lowest value from the list (priority heap queue pop) and repeat the process
+    # we are going to keep the items in the heap queue and update the f costs and path costs
+    # we are going to be storing tuples in out heap queue
 
-    # first lets create a list of the nodes that we could travel to
-    print(G)
+    # 1. Grab available nodes from the source node
+    # 2. Calculate the f score and path cost for traveling to all visible nodes from current node (f score is the heuristic for current node ONLY + path cost so far)
+    # 3. Push the tuples with (f score, path cost, path taken so far) onto the queue
+    # 4. Pop the node with smallest f score
+    # 5. If the target is not in the route of the popped node, expand nodes that the last node on the route can see
+    # 6. Else if the target is in the tuple popped, found path and can finish
+    # 7. Repeat 2 - 6 until target is found
+    # 8. profit
+
     # Set current node to the starting node
     current_node = source
     # get the available node we can travel to
     A_Star(source, target)
 
 
-def A_Star(source, target):
-    current_node = source
-    route = [source]
-    total_cost = 0
+def A_Star(source, target, weight_map, heuristic_map):
+    heap_list = []
     flag = True
     while flag:
-        if (current_node == target):
-            print('Reached destination')
-            break
-        dict_next_node_and_f_score = {}
-        list_f_scores = []
-        # Get the g scores for the availble nodes to travel to from current node
-        # get the costs to travel to each node
-        for node_name in G[current_node]:
-            dict_next_node_and_f_score.update({node_name:G[current_node][node_name]})
-        print('list of scores with g score = : ', dict_next_node_and_f_score)
+        print('Heaplist at start of loop: ', heap_list)
+        for next_node in weight_map[source]:
+            # in order want to push (f score, path cost, path from source to now)
+            tuple_to_push = (weight_map[source][next_node] + heuristic_map[next_node],weight_map[source][next_node],[source,next_node])
+            push(heap_list,tuple_to_push)
+
+        next_item = pop(heap_list)
+        # discover all the nodes from the next item
+        print("next item 2,-1: ",next_item[2][-1])
+        for next_node in weight_map[next_item[2][-1]]:
+            print('next node: ', next_node)
+            for node in next_node:
+                # Update the f score, path score, and path taken
+                item_list = list(next_item)
+                print(weight_map[next_item[2][-1]][node])
+                # Convert tuple into a list, so it can be modified and then update path cost
+                item_list[1] += weight_map[next_item[2][-1]][node]
+                print('listified tuple: ', item_list)
+                # Update the f score by adding the heuristic for current node ONLY to the path cost so far
+                item_list[0] = heuristic_map[next_node] + item_list[1]
+                item_list[2].append(next_node)
+                # Re-convert the list back into a tuple
+                next_item = tuple(item_list)
+                print('re-tupled: ', next_item)
+                # Push the new tuple onto the priority queue
+                push(heap_list, next_item)
+                #print("next item at 1: ",next_item[1])
+        # Pop the next node from the priority queue if not empty
+        source = pop(heap_list)
+        if source[2][-1] == target:
+            flag = False
+            print('Source: ', source)
+        source = source[2][-1]
+
+        #print('Next item: ', next_item)
+        print('Priority queue: ', heap_list)
+        # flag = False
 
 
-        # compute the f scores
-        for i in dict_next_node_and_f_score.keys():
-            dict_next_node_and_f_score[i] += H[i]
-        #get the lowest node of the f score
-        lowest_node = min(dict_next_node_and_f_score, key=dict_next_node_and_f_score.get)
-
-        print(lowest_node)
-        current_node=lowest_node
-        route.append(current_node)
-        # Add total cost here
-        print('route: ', route)
 
 
 if __name__ == "__main__":
     source = 'S'
     target = 'G'
-    main()
+    A_Star(source, target, G, H)
+    # source = 'Arad'
+    # target = 'Bucharest'
+    # A_Star(source, target, Romania_Map, Heuristics)
