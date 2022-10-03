@@ -101,8 +101,8 @@ def A_Star(source, target, weight_map, heuristic_map):
         print('Heaplist at start of loop: ', heap_list)
         for next_node in weight_map[source]:
             # in order want to push (f score, path cost, path from source to now)
-            tuple_to_push = (weight_map[source][next_node] + heuristic_map[next_node],weight_map[source][next_node],[source,next_node])
             push(heap_list,tuple_to_push)
+            print('Priority queue after pushing: ', heap_list)
 
         next_item = pop(heap_list)
         # discover all the nodes from the next item
@@ -127,14 +127,17 @@ def A_Star(source, target, weight_map, heuristic_map):
                 #print("next item at 1: ",next_item[1])
         # Pop the next node from the priority queue if not empty
         source = pop(heap_list)
+        #source = heap_list[0]
+        print('Popped ', source)
         if source[2][-1] == target:
             flag = False
             print('Source: ', source)
         source = source[2][-1]
 
         #print('Next item: ', next_item)
-        print('Priority queue: ', heap_list)
+        print('Priority queue: ', heap_list,'\n')
         # flag = False
+    print('Loop ended')
 
 
 
