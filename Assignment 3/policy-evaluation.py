@@ -26,23 +26,47 @@ state_value_table = {'A': 0, 'B': 0, 'C': 0, 'D': 100}
 # Gamma
 discounting_factor = .8
 
-def policy_eval(iterations,policy,start,terminal):
-   # for i in range(iterations):
-   #     state_value_table['A'] = (1 * .9 * (reward_model + discounting_factor * state_value_table['B'])) + (1 * .1 * (reward_model + discounting_factor * state_value_table['B'])) + (0 * .9 * (reward_model + discounting_factor * state_value_table['C'])) + (0 * .1 * (reward_model + discounting_factor * state_value_table['B']))
-   #     state_value_table['B'] = (1 * .9 * (reward_model + discounting_factor * state_value_table['C'])) + (
-   #                 1 * .1 * (reward_model + discounting_factor * state_value_table['A'])) + (
-   #                                          0 * .9 * (reward_model + discounting_factor * state_value_table['A'])) + (
-   #                                          0 * .1 * (reward_model + discounting_factor * state_value_table['C']))
+def policy_eval(iterations,policies,start,terminal):
     for i in range(iterations):
+        list = []
         value = 0
-        for next_states in state_transition_model[policy][start]:
-            print(next_states)
-            value = state_transition_model[policy][start][next_states]
-            print("value from stm = ",value)
-            for action in action_set:
-                value = value * policy_map[policy][next_states][action]
-                #might need to set things before recursing or runing another iteration
-                print(" value * action = ",value)
+        for policy in policies:
+            if policy != 3:
+                for next_states in state_transition_model[policy][start]:
+                    #print(next_states)
+                    value = state_transition_model[policy][start][next_states]
+                    #print("value from stm = ",value)
+                    for action in action_set:
+                        value = value * policy_map[policy][next_states][action]
+                        #might need to set things before recursing or runing another iteration
+                        #print(" value * action = ",value)
+                        #print("next_state = ",next_states)
+                        bracket_eq = (reward_model + discounting_factor * state_value_table[next_states])
+                        prob = value * bracket_eq
+                        list.append(prob)
+                        #print("bracket_eq = ", bracket_eq)
+            else:
+                for next_states in state_transition_model[policy][start]:
+                    #print(next_states)
+                    value = state_transition_model[policy][start][next_states]
+                    #print("value from stm = ",value)
+                    for action in action_set:
+                        value = value * policy_map[policy][next_states][action]
+                        #might need to set things before recursing or runing another iteration
+                        #print(" value * action = ",value)
+                        #print("next_state = ",next_states)
+                        bracket_eq = (reward_model + discounting_factor * state_value_table[next_states])
+                        prob = value * bracket_eq
+                        list.append(prob)
+                        #print("bracket_eq = ", bracket_eq)
+
+            num = 0
+            for j in list:
+                num += j
+            state_value_table[start] = num
+            print('num = ', num)
+            # [-10 + gamma * V(C)]
+
 
 if __name__ == '__main__':
     policy_eval(1,1,'A','D')
