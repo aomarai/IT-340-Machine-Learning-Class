@@ -15,8 +15,10 @@ policy_map = {
         'B': {1: 1, 2: 0},
         'C': {1: 0, 2: 1}}
 }
+# actions available
 action_set = {1, 2}
-state_transition_model_2 = {
+# state transition model
+state_transition_model = {
     'A': {1: {'B': .9, 'C': .1}, 2: {'B': .1, 'C': .9}},
     'B': {1: {'D': .9, 'A': .1}, 2: {'D': .1, 'A': .9}},
     'C': {1: {'A': .9, 'D': .1}, 2: {'A': .1, 'D': .9}}
@@ -29,17 +31,20 @@ reward_model = -10
 
 
 def policy_eval(iterations, policy):
+    """Evaluates the policies in the policy map based on a Markov Decision Process."""
+    # do it for 100 iteration
     for i in range(iterations):
         # Check each state
-        for state in state_transition_model_2:
+        for state in state_transition_model:
             if not state == 'D':
                 state_val = 0
                 # Check each action
                 for action in action_set:
                     # Check each subsequent action
-                    for sub_state in state_transition_model_2[state][action]:
-                        # One or zero * .9 or .1
-                        state_val += state_transition_model_2[state][action][sub_state] * policy_map[policy][state][
+                    for sub_state in state_transition_model[state][action]:
+                        # Multiplies the action taken to the probability of an action with the reward, gamma,
+                        # and value of subsequent states
+                        state_val += state_transition_model[state][action][sub_state] * policy_map[policy][state][
                             action] * (reward_model + discounting_factor * state_value_table[sub_state])
                         state_value_table[state] = round(state_val, 2)
     # formatting
