@@ -30,7 +30,6 @@ reward_model = -10
 
 def policy_eval(iterations, policy):
     for i in range(iterations):
-        vals = []
         # Check each state
         for state in state_transition_model_2:
             if not state == 'D':
@@ -42,7 +41,6 @@ def policy_eval(iterations, policy):
                         # One or zero * .9 or .1
                         state_val += state_transition_model_2[state][action][sub_state] * policy_map[policy][state][
                             action] * (reward_model + discounting_factor * state_value_table[sub_state])
-                        vals.append(state_val)
                         state_value_table[state] = round(state_val, 2)
     # formatting
 
