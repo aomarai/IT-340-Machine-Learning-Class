@@ -54,6 +54,7 @@ def policy_eval(iterations, policy):
     print('Vπ(C)= ', state_value_table['C'])
     print('Vπ(D)= ', state_value_table['D'])
 
+
 if __name__ == '__main__':
     print('Policy 1')
     policy_eval(100, 1)
