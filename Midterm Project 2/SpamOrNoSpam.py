@@ -53,6 +53,7 @@ def select_emails():
         # Combine the leftover spam emails with the leftover non-spam emails to create the testing set.
         testing_list.extend(spam_list)
         testing_list.extend(ham_list)
+        random.shuffle(testing_list)
 
         # Count the number of times each word appears in the 500 emails for both the spam and non-spam emails
         for email in ham_500:
@@ -103,7 +104,7 @@ def calculate_probability():
 
 
 def test_classifier():
-    """Test the classifier on the 200 emails that were not used for training. Calculates the true positive rate,
+    """Tests the classifier on the 200 emails that were not used for training. Calculates the true positive rate,
     true negative rate, false positive rate, and false negative rate. Also calculates the accuracy of the classifier,
     the precision of the classifier, the recall of the classifier, and the F1 score of the classifier."""
 
@@ -130,15 +131,15 @@ def test_classifier():
         # the email is classified as spam. If the probability that the email is not spam is greater than the
         # probability that the email is spam, the email is classified as not spam.
         if spam_probability > ham_probability:
-            if testing_list.index(email) < 100:
+            if email in spam_list:
                 true_positive += 1
             else:
                 false_positive += 1
         else:
-            if testing_list.index(email) < 100:
-                false_negative += 1
-            else:
+            if email in ham_list:
                 true_negative += 1
+            else:
+                false_negative += 1
 
     # Calculate the true positive rate, true negative rate, false positive rate, and false negative rate.
     true_positive_rate = true_positive / (true_positive + false_negative)
