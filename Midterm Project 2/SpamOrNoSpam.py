@@ -1,3 +1,8 @@
+"""
+@author: Ashkan Omaraie
+@author: John Skluzacek
+"""
+
 import os
 import random
 
@@ -19,8 +24,6 @@ def select_emails():
     """Select 500 non-spam (ham) and 500 phishing emails (spam) randomly, then count the number of times each word
     appears. """
     # go through the ham list folder and select 500
-
-    # we do a little bit of reading
     # puts all 600 emails in text format into a list
     try:
         for file in os.listdir('email data/Ham/300 good emails'):
